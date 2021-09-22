@@ -30,6 +30,36 @@ const u8 BPAWN_START[BOARD_SIZE] = {
    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
+const u8 WPAWN_PROMOTION[BOARD_SIZE] = {
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+};
+
+const u8 BPAWN_PROMOTION[BOARD_SIZE] = {
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+};
+
 void add_move(
    const u8 source,
    const u8 dest,
@@ -43,25 +73,43 @@ void add_move(
 }
 
 void pawn_moves(const Board *board, const u8 source, Smove_list *smove_list) {
-   u8 pawn, up_one, up_two, starting_pos, attack_one, attack_two;
+   u8 up_one, up_two, starting_pos, attack_one, attack_two, promotion;
+   u8 pawn, knight, bishop, rook, queen;
    if (board->stm == WTURN) {
       pawn = PAWN | CBIT;
+      knight = KNIGHT | CBIT;
+      bishop = BISHOP | CBIT;
+      rook = ROOK | CBIT;
+      queen = QUEEN | CBIT;
       up_one = source - 16;
       up_two = source - 32;
       starting_pos = WPAWN_START[source];
       attack_one = source - 17;
       attack_two = source - 15;
+      promotion = WPAWN_PROMOTION[up_one];
    } else {
       pawn = PAWN;
+      knight = KNIGHT;
+      bishop = BISHOP;
+      rook = ROOK;
+      queen = QUEEN;
       up_one = source + 16;
       up_two = source + 32;
       starting_pos = BPAWN_START[source];
       attack_one = source + 15;
       attack_two = source + 17;
+      promotion = BPAWN_PROMOTION[up_one];
    }
 
    if (board->sqrs[up_one] == EMPTY) {
-      add_move(source, up_one, pawn, smove_list);
+      if (promotion == 1) {
+         add_move(source, up_one, knight, smove_list);
+         add_move(source, up_one, bishop, smove_list);
+         add_move(source, up_one, rook, smove_list);
+         add_move(source, up_one, queen, smove_list);
+      } else {
+         add_move(source, up_one, pawn, smove_list);
+      }
 
       if (starting_pos == 1 && board->sqrs[up_two] == EMPTY) {
          add_move(source, up_two, pawn, smove_list);
@@ -73,7 +121,14 @@ void pawn_moves(const Board *board, const u8 source, Smove_list *smove_list) {
          && (board->pc_list[board->sqrs[source]].ptype & CBIT)
             != (board->pc_list[board->sqrs[attack_one]].ptype & CBIT))
    {
-      add_move(source, attack_one, pawn, smove_list);
+      if (promotion == 1) {
+         add_move(source, attack_one, knight, smove_list);
+         add_move(source, attack_one, bishop, smove_list);
+         add_move(source, attack_one, rook, smove_list);
+         add_move(source, attack_one, queen, smove_list);
+      } else {
+         add_move(source, attack_one, pawn, smove_list);
+      }
    }
 
    if (board->sqrs[attack_two] != OFF_BOARD
@@ -81,7 +136,14 @@ void pawn_moves(const Board *board, const u8 source, Smove_list *smove_list) {
          && (board->pc_list[board->sqrs[source]].ptype & CBIT)
             != (board->pc_list[board->sqrs[attack_two]].ptype & CBIT))
    {
-      add_move(source, attack_one, pawn, smove_list);
+      if (promotion == 1) {
+         add_move(source, attack_two, knight, smove_list);
+         add_move(source, attack_two, bishop, smove_list);
+         add_move(source, attack_two, rook, smove_list);
+         add_move(source, attack_two, queen, smove_list);
+      } else {
+         add_move(source, attack_two, pawn, smove_list);
+      }
    }
 }
 
@@ -102,7 +164,7 @@ Smove_list movegen(const Board *board) {
    return smove_list;
 }
 
-void print_move(const Smove *smove) {
+void print_move(const Board *board, const Smove *smove) {
    const char *sqr_names[BOARD_SIZE] = {
       "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-",
       "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-",
@@ -118,5 +180,24 @@ void print_move(const Smove *smove) {
       "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-",
    };
 
-   printf("%s%s", sqr_names[smove->source], sqr_names[smove->dest]);
+   char pc = ' ';
+   // not pretty but defines a promotion
+   if ((board->stm == WTURN
+      && (board->pc_list[board->sqrs[smove->source]].ptype & PAWN) != 0
+      && WPAWN_PROMOTION[smove->dest] == 1)
+      || (board->stm == BTURN
+      && (board->pc_list[board->sqrs[smove->source]].ptype & PAWN) != 0
+      && BPAWN_PROMOTION[smove->dest] == 1)
+   ) {
+      if ((smove->ptype & KNIGHT) != 0) {
+         pc = 'n';
+      } else if ((smove->ptype & BISHOP) != 0) {
+         pc = 'b';
+      } else if ((smove->ptype & ROOK) != 0) {
+         pc = 'r';
+      } else if ((smove->ptype & QUEEN) != 0) {
+         pc = 'q';
+      }
+   }
+   printf("%s%s%c", sqr_names[smove->source], sqr_names[smove->dest], pc);
 }

@@ -58,6 +58,6 @@ void print_board(const Board *board);
 
 // movegen.c
 Smove_list movegen(const Board *board);
-void print_move(const Smove *smove);
+void print_move(const Board *board, const Smove *smove);
 
 #endif

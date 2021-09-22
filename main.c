@@ -8,7 +8,7 @@ int main(void) {
 
    for (unsigned i = 0; i < smove_list.len; i++) {
       printf("%d: ", i + 1);
-      print_move(&smove_list.list[i]);
+      print_move(&board, &smove_list.list[i]);
       printf("\n");
    }
 
