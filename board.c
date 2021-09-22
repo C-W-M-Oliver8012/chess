@@ -40,10 +40,10 @@ Board get_default_board() {
    return fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 }
 
-Board fen(char *fen) {
+Board fen(const char *fen) {
    Board board = get_empty_board();
 
-   unsigned len = strlen(fen);
+   const unsigned len = strlen(fen);
 
    if (len == 0) return board;
 
@@ -54,7 +54,7 @@ Board fen(char *fen) {
    while (fen_index < len && fen[fen_index] == ' ') fen_index++;
    while (fen_index < len) {
       if (fen_seg == 0) {
-         if (square > 63) break;
+         if (square > 63 || wpc >= BTURN || bpc >= PC_LIST_SIZE) break;
          if (fen[fen_index] == 'p') {
             board.pc_list[bpc].ptype = PAWN;
             board.pc_list[bpc].loc = B_INDEXES[square];
@@ -134,8 +134,8 @@ Board fen(char *fen) {
             || fen[fen_index] == '7'
             || fen[fen_index] == '8'
          ) {
-            u8 n = (u8)fen[fen_index] - 48;
-            for (unsigned t = 0; t < n; t++) {
+            const u8 num_spaces = fen[fen_index] - 48;
+            for (unsigned i = 0; i < num_spaces; i++) {
                square++;
             }
          }
@@ -156,26 +156,29 @@ Board fen(char *fen) {
    return board;
 }
 
-void print_board(Board *board) {
-   char pieces[2][6] = {
+void print_board(const Board *board) {
+   const char pieces[2][6] = {
       {'I', 'N', 'B', 'R', 'Q', 'K'},
       {'i', 'n', 'b', 'r', 'q', 'k'},
    };
 
+   // prints the side to move
    if (board->stm == WTURN) {
       printf("      stm: white\n");
    } else {
       printf("      stm: black\n");
    }
+
+   // prints board and pieces
    for (unsigned rank = 2; rank < 10; rank++) {
       printf(" (%d) ", 10 - rank);
       for (unsigned file = 4; file < 12; file++) {
-         unsigned index = rank * 16 + file;
+         const unsigned index = rank * 16 + file;
 
          if (board->sqrs[index] == EMPTY) {
             printf(" . ");
          } else {
-            unsigned p = board->sqrs[index];
+            const unsigned p = board->sqrs[index];
             unsigned color = 0;
             unsigned pc_index = 0;
 

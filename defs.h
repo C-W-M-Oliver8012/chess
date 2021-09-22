@@ -41,7 +41,7 @@ typedef struct Board {
 // board.c
 Board get_empty_board();
 Board get_default_board();
-Board fen(char *fen);
-void print_board(Board *board);
+Board fen(const char *fen);
+void print_board(const Board *board);
 
 #endif
