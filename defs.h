@@ -26,6 +26,7 @@
 #define BKING 33
 
 typedef unsigned char u8;
+typedef signed char i8;
 
 typedef struct Pc {
    u8 ptype;

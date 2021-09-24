@@ -1,5 +1,20 @@
 #include "defs.h"
 
+const char *sqr_names[BOARD_SIZE] = {
+   "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-",
+   "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-",
+   "-", "-", "-", "-", "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8", "-", "-", "-", "-",
+   "-", "-", "-", "-", "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7", "-", "-", "-", "-",
+   "-", "-", "-", "-", "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6", "-", "-", "-", "-",
+   "-", "-", "-", "-", "a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5", "-", "-", "-", "-",
+   "-", "-", "-", "-", "a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4", "-", "-", "-", "-",
+   "-", "-", "-", "-", "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3", "-", "-", "-", "-",
+   "-", "-", "-", "-", "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2", "-", "-", "-", "-",
+   "-", "-", "-", "-", "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "-", "-", "-", "-",
+   "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-",
+   "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-",
+};
+
 const u8 WPAWN_START[BOARD_SIZE] = {
    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -147,9 +162,70 @@ void pawn_moves(const Board *board, const u8 source, Smove_list *smove_list) {
    }
 }
 
+void leaper_moves(
+   const Board *board,
+   const u8 source,
+   const i8 *offsets,
+   const u8 len,
+   Smove_list *smove_list
+) {
+   const u8 pc_source = board->sqrs[source];
+
+   for (unsigned i = 0; i < len; i++) {
+      const u8 dest = source + offsets[i];
+      const u8 pc_dest = board->sqrs[dest];
+
+      if (board->sqrs[dest] == OFF_BOARD) {
+         continue;
+      } else if (board->sqrs[dest] == EMPTY) {
+         add_move(source, dest, board->pc_list[pc_source].ptype, smove_list);
+      } else if ((board->pc_list[pc_source].ptype & CBIT)
+         != (board->pc_list[pc_dest].ptype & CBIT))
+      {
+         add_move(source, dest, board->pc_list[pc_source].ptype, smove_list);
+      }
+   }
+}
+
+void slider_moves(
+   const Board *board,
+   const u8 source,
+   const i8 *offsets,
+   const u8 len,
+   Smove_list *smove_list
+) {
+   const u8 pc_source = board->sqrs[source];
+
+   for (unsigned i = 0; i < len; i++) {
+      u8 dest = source;
+      while(1) {
+         dest = dest + offsets[i];
+         const u8 pc_dest = board->sqrs[dest];
+
+         if (board->sqrs[dest] == OFF_BOARD) {
+            break;
+         } else if (board->sqrs[dest] == EMPTY) {
+            add_move(source, dest, board->pc_list[pc_source].ptype, smove_list);
+         } else if ((board->pc_list[pc_source].ptype & CBIT)
+            != (board->pc_list[pc_dest].ptype & CBIT))
+         {
+            add_move(source, dest, board->pc_list[pc_source].ptype, smove_list);
+            break;
+         } else {
+            break;
+         }
+      }
+   }
+}
+
 Smove_list movegen(const Board *board) {
    Smove_list smove_list;
    smove_list.len = 0;
+
+   const i8 knight_moves[8] = {-18, -33, -31, -14, 14, 31, 33, 18};
+   const i8 bishop_moves[4] = {-17, -15, 15, 17};
+   const i8 rook_moves[4] = {-16, -1, 1, 16};
+   const i8 queen_moves[8] = {-17, -16, -15, -1, 1, 15, 16, 17};
 
    // loop through piece list
    for (u8 i = board->stm; i < board->stm + 16; i++) {
@@ -157,6 +233,16 @@ Smove_list movegen(const Board *board) {
       if (board->sqrs[board->pc_list[i].loc] == i) {
          if ((board->pc_list[i].ptype & PAWN) != 0) {
             pawn_moves(board, board->pc_list[i].loc, &smove_list);
+         } else if ((board->pc_list[i].ptype & KNIGHT) != 0) {
+            leaper_moves(board, board->pc_list[i].loc, knight_moves, 8, &smove_list);
+         } else if ((board->pc_list[i].ptype & BISHOP) != 0) {
+            slider_moves(board, board->pc_list[i].loc, bishop_moves, 4, &smove_list);
+         } else if ((board->pc_list[i].ptype & ROOK) != 0) {
+            slider_moves(board, board->pc_list[i].loc, rook_moves, 4, &smove_list);
+         } else if ((board->pc_list[i].ptype & QUEEN) != 0) {
+            slider_moves(board, board->pc_list[i].loc, queen_moves, 8, &smove_list);
+         } else if ((board->pc_list[i].ptype & KNIGHT) != 0) {
+            leaper_moves(board, board->pc_list[i].loc, queen_moves, 8, &smove_list);
          }
       }
    }
@@ -165,21 +251,6 @@ Smove_list movegen(const Board *board) {
 }
 
 void print_move(const Board *board, const Smove *smove) {
-   const char *sqr_names[BOARD_SIZE] = {
-      "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-",
-      "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-",
-      "-", "-", "-", "-", "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8", "-", "-", "-", "-",
-      "-", "-", "-", "-", "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7", "-", "-", "-", "-",
-      "-", "-", "-", "-", "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6", "-", "-", "-", "-",
-      "-", "-", "-", "-", "a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5", "-", "-", "-", "-",
-      "-", "-", "-", "-", "a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4", "-", "-", "-", "-",
-      "-", "-", "-", "-", "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3", "-", "-", "-", "-",
-      "-", "-", "-", "-", "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2", "-", "-", "-", "-",
-      "-", "-", "-", "-", "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "-", "-", "-", "-",
-      "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-",
-      "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-",
-   };
-
    char pc = ' ';
    // not pretty but defines a promotion
    if ((board->stm == WTURN
