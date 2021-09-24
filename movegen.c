@@ -241,7 +241,7 @@ Smove_list movegen(const Board *board) {
             slider_moves(board, board->pc_list[i].loc, rook_moves, 4, &smove_list);
          } else if ((board->pc_list[i].ptype & QUEEN) != 0) {
             slider_moves(board, board->pc_list[i].loc, queen_moves, 8, &smove_list);
-         } else if ((board->pc_list[i].ptype & KNIGHT) != 0) {
+         } else if ((board->pc_list[i].ptype & KING) != 0) {
             leaper_moves(board, board->pc_list[i].loc, queen_moves, 8, &smove_list);
          }
       }
@@ -271,4 +271,19 @@ void print_move(const Board *board, const Smove *smove) {
       }
    }
    printf("%s%s%c", sqr_names[smove->source], sqr_names[smove->dest], pc);
+}
+
+u64 perft(const Board *board, u8 depth) {
+   if (depth == 0) return 1;
+   
+   u64 nodes = 0;
+   Smove_list smove_list = movegen(board);
+
+   for (unsigned i = 0; i < smove_list.len; i++) {
+      Board cboard = *board;
+      make_move(&cboard, &smove_list.list[i]);
+      nodes += perft(&cboard, depth - 1);
+   }
+
+   return nodes;
 }

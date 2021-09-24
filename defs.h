@@ -27,6 +27,7 @@
 
 typedef unsigned char u8;
 typedef signed char i8;
+typedef unsigned long u64;
 
 typedef struct Pc {
    u8 ptype;
@@ -60,5 +61,9 @@ void print_board(const Board *board);
 // movegen.c
 Smove_list movegen(const Board *board);
 void print_move(const Board *board, const Smove *smove);
+u64 perft(const Board *board, u8 depth);
+
+// make_move.c
+void make_move(Board *board, Smove *smove);
 
 #endif
