@@ -31,11 +31,11 @@ typedef unsigned long u64;
 
 typedef struct Pc {
    u8 ptype;
-   u8 loc;
+   u8 bloc;
 } Pc;
 
 typedef struct Board {
-   u8 sqrs[BOARD_SIZE];
+   u8 ploc[BOARD_SIZE];
    Pc pc_list[PC_LIST_SIZE];
    u8 stm;
 } Board;
@@ -57,13 +57,5 @@ Board get_empty_board();
 Board get_default_board();
 Board fen(const char *fen);
 void print_board(const Board *board);
-
-// movegen.c
-Smove_list movegen(const Board *board);
-void print_move(const Board *board, const Smove *smove);
-u64 perft(const Board *board, u8 depth);
-
-// make_move.c
-void make_move(Board *board, Smove *smove);
 
 #endif
