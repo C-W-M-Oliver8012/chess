@@ -29,6 +29,10 @@ typedef unsigned char u8;
 typedef signed char i8;
 typedef unsigned long u64;
 
+typedef struct Bconst {
+   u8 b_indexes[64];
+} Bconst;
+
 typedef struct Pc {
    u8 ptype;
    u8 bloc;
@@ -53,9 +57,10 @@ typedef struct Smove_list {
 
 
 // board.c
-Board get_empty_board();
-Board get_default_board();
-Board fen(const char *fen);
+void init_bconst(Bconst *bconst);
+Board get_empty_board(const u8 *b_indexes);
+Board get_default_board(const u8 *b_indexes);
+Board fen(const char *fen, const u8 *b_indexes);
 void print_board(const Board *board);
 
 #endif

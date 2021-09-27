@@ -1,7 +1,10 @@
 #include "defs.h"
 
 int main(void) {
-   const Board board = get_default_board();
+   Bconst bconst;
+   init_bconst(&bconst);
+
+   const Board board = get_default_board(bconst.b_indexes);
    print_board(&board);
 
    return 0;

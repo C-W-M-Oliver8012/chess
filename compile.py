@@ -1,7 +1,7 @@
 import os
 
 cc = "clang"
-cflags = "-std=c18 -Wall -Wextra -Ofast -march=native"
+cflags = "-g -std=c18 -Wall -Wextra -Ofast"
 cfiles = "main.c board.c"
 command = "%s %s %s -o GhostyChess" % (cc, cflags, cfiles)
 

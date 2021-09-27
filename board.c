@@ -1,17 +1,24 @@
 #include "defs.h"
 
-const u8 B_INDEXES[64] = {
-    36,  37,  38,  39,  40,  41,  42,  43,
-    52,  53,  54,  55,  56,  57,  58,  59,
-    68,  69,  70,  71,  72,  73,  74,  75,
-    84,  85,  86,  87,  88,  89,  90,  91,
-   100, 101, 102, 103, 104, 105, 106, 107,
-   116, 117, 118, 119, 120, 121, 122, 123,
-   132, 133, 134, 135, 136, 137, 138, 139,
-   148, 149, 150, 151, 152, 153, 154, 155,
-};
+void init_bconst(Bconst *bconst) {
+   const u8 b_indexes[64] = {
+      36,  37,  38,  39,  40,  41,  42,  43,
+      52,  53,  54,  55,  56,  57,  58,  59,
+      68,  69,  70,  71,  72,  73,  74,  75,
+      84,  85,  86,  87,  88,  89,  90,  91,
+     100, 101, 102, 103, 104, 105, 106, 107,
+     116, 117, 118, 119, 120, 121, 122, 123,
+     132, 133, 134, 135, 136, 137, 138, 139,
+     148, 149, 150, 151, 152, 153, 154, 155,
+  };
 
-Board get_empty_board() {
+   // init b_indexes
+   for (unsigned i = 0; i < 64; i++) {
+      bconst->b_indexes[i] = b_indexes[i];
+   }
+}
+
+Board get_empty_board(const u8 *b_indexes) {
    Board board;
 
    // init ploc
@@ -21,7 +28,7 @@ Board get_empty_board() {
 
    // create empty ploc
    for (unsigned i = 0; i < 64; i++) {
-      board.ploc[B_INDEXES[i]] = EMPTY;
+      board.ploc[b_indexes[i]] = EMPTY;
    }
 
    // init pc_list
@@ -36,12 +43,15 @@ Board get_empty_board() {
    return board;
 }
 
-Board get_default_board() {
-   return fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+Board get_default_board(const u8 *b_indexes) {
+   return fen(
+      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      b_indexes
+   );
 }
 
-Board fen(const char *fen) {
-   Board board = get_empty_board();
+Board fen(const char *fen, const u8 *b_indexes) {
+   Board board = get_empty_board(b_indexes);
 
    const unsigned len = strlen(fen);
 
@@ -57,73 +67,73 @@ Board fen(const char *fen) {
          if (square > 63 || wpc >= BTURN || bpc >= PC_LIST_SIZE) break;
          if (fen[fen_index] == 'p') {
             board.pc_list[bpc].ptype = PAWN;
-            board.pc_list[bpc].bloc = B_INDEXES[square];
-            board.ploc[B_INDEXES[square]] = bpc;
+            board.pc_list[bpc].bloc = b_indexes[square];
+            board.ploc[b_indexes[square]] = bpc;
             bpc++;
             square++;
          } else if (fen[fen_index] == 'n') {
             board.pc_list[bpc].ptype = KNIGHT;
-            board.pc_list[bpc].bloc = B_INDEXES[square];
-            board.ploc[B_INDEXES[square]] = bpc;
+            board.pc_list[bpc].bloc = b_indexes[square];
+            board.ploc[b_indexes[square]] = bpc;
             bpc++;
             square++;
          } else if (fen[fen_index] == 'b') {
             board.pc_list[bpc].ptype = BISHOP;
-            board.pc_list[bpc].bloc = B_INDEXES[square];
-            board.ploc[B_INDEXES[square]] = bpc;
+            board.pc_list[bpc].bloc = b_indexes[square];
+            board.ploc[b_indexes[square]] = bpc;
             bpc++;
             square++;
          } else if (fen[fen_index] == 'r') {
             board.pc_list[bpc].ptype = ROOK;
-            board.pc_list[bpc].bloc = B_INDEXES[square];
-            board.ploc[B_INDEXES[square]] = bpc;
+            board.pc_list[bpc].bloc = b_indexes[square];
+            board.ploc[b_indexes[square]] = bpc;
             bpc++;
             square++;
          } else if (fen[fen_index] == 'q') {
             board.pc_list[bpc].ptype = QUEEN;
-            board.pc_list[bpc].bloc = B_INDEXES[square];
-            board.ploc[B_INDEXES[square]] = bpc;
+            board.pc_list[bpc].bloc = b_indexes[square];
+            board.ploc[b_indexes[square]] = bpc;
             bpc++;
             square++;
          } else if (fen[fen_index] == 'k') {
             board.pc_list[BKING].ptype = KING;
-            board.pc_list[BKING].bloc = B_INDEXES[square];
-            board.ploc[B_INDEXES[square]] = BKING;
+            board.pc_list[BKING].bloc = b_indexes[square];
+            board.ploc[b_indexes[square]] = BKING;
             square++;
          } else if (fen[fen_index] == 'P') {
             board.pc_list[wpc].ptype = PAWN | CBIT;
-            board.pc_list[wpc].bloc = B_INDEXES[square];
-            board.ploc[B_INDEXES[square]] = wpc;
+            board.pc_list[wpc].bloc = b_indexes[square];
+            board.ploc[b_indexes[square]] = wpc;
             wpc++;
             square++;
          } else if (fen[fen_index] == 'N') {
             board.pc_list[wpc].ptype = KNIGHT | CBIT;
-            board.pc_list[wpc].bloc = B_INDEXES[square];
-            board.ploc[B_INDEXES[square]] = wpc;
+            board.pc_list[wpc].bloc = b_indexes[square];
+            board.ploc[b_indexes[square]] = wpc;
             wpc++;
             square++;
          } else if (fen[fen_index] == 'B') {
             board.pc_list[wpc].ptype = BISHOP | CBIT;
-            board.pc_list[wpc].bloc = B_INDEXES[square];
-            board.ploc[B_INDEXES[square]] = wpc;
+            board.pc_list[wpc].bloc = b_indexes[square];
+            board.ploc[b_indexes[square]] = wpc;
             wpc++;
             square++;
          } else if (fen[fen_index] == 'R') {
             board.pc_list[wpc].ptype = ROOK | CBIT;
-            board.pc_list[wpc].bloc = B_INDEXES[square];
-            board.ploc[B_INDEXES[square]] = wpc;
+            board.pc_list[wpc].bloc = b_indexes[square];
+            board.ploc[b_indexes[square]] = wpc;
             wpc++;
             square++;
          } else if (fen[fen_index] == 'Q') {
             board.pc_list[wpc].ptype = QUEEN | CBIT;
-            board.pc_list[wpc].bloc = B_INDEXES[square];
-            board.ploc[B_INDEXES[square]] = wpc;
+            board.pc_list[wpc].bloc = b_indexes[square];
+            board.ploc[b_indexes[square]] = wpc;
             wpc++;
             square++;
          } else if (fen[fen_index] == 'K') {
             board.pc_list[WKING].ptype = KING | CBIT;
-            board.pc_list[WKING].bloc = B_INDEXES[square];
-            board.ploc[B_INDEXES[square]] = WKING;
+            board.pc_list[WKING].bloc = b_indexes[square];
+            board.ploc[b_indexes[square]] = WKING;
             square++;
          } else if (fen[fen_index] == '1'
             || fen[fen_index] == '2'
