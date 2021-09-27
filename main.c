@@ -1,4 +1,5 @@
 #include "defs.h"
+#include "board.h"
 
 int main(void) {
    const Bconst bconst = get_bconst();

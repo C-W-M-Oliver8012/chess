@@ -1,4 +1,4 @@
-#include "defs.h"
+#include "board.h"
 
 Bconst get_bconst() {
    Bconst bconst;
