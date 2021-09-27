@@ -31,6 +31,11 @@ typedef unsigned long u64;
 
 typedef struct Bconst {
    u8 b_indexes[64];
+   char *sqr_names[BOARD_SIZE];
+   u8 wpawn_start[BOARD_SIZE];
+   u8 bpawn_start[BOARD_SIZE];
+   u8 wpawn_promotion[BOARD_SIZE];
+   u8 bpawn_promotion[BOARD_SIZE];
 } Bconst;
 
 typedef struct Pc {
@@ -57,7 +62,7 @@ typedef struct Smove_list {
 
 
 // board.c
-void init_bconst(Bconst *bconst);
+Bconst get_bconst();
 Board get_empty_board(const u8 *b_indexes);
 Board get_default_board(const u8 *b_indexes);
 Board fen(const char *fen, const u8 *b_indexes);
