@@ -161,7 +161,7 @@ Board fen(const char *fen, const u8 *b_indexes) {
 
    if (len == 0) return board;
 
-   u8 square, fen_index, fen_seg, wpc, bpc;
+   unsigned square, fen_index, fen_seg, wpc, bpc;
    square = fen_index = fen_seg = 0;
    wpc = WTURN;
    bpc = BTURN;
