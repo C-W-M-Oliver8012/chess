@@ -1,6 +1,6 @@
 #include "board.h"
 
-Bconst get_bconst() {
+Bconst get_bconst(void) {
    Bconst bconst;
 
    const u8 b_indexes[64] = {
@@ -90,32 +90,32 @@ Bconst get_bconst() {
    };
 
    // init b_indexes
-   for (unsigned i = 0; i < 64; i++) {
+   for (u16 i = 0; i < 64; i++) {
       bconst.b_indexes[i] = b_indexes[i];
    }
 
    // init sqr_names
-   for (unsigned i = 0; i < BOARD_SIZE; i++) {
+   for (u16 i = 0; i < BOARD_SIZE; i++) {
       bconst.sqr_names[i] = sqr_names[i];
    }
 
    // init wpawn_start
-   for (unsigned i = 0; i < BOARD_SIZE; i++) {
+   for (u16 i = 0; i < BOARD_SIZE; i++) {
       bconst.wpawn_start[i] = wpawn_start[i];
    }
 
    // init bpawn_start
-   for (unsigned i = 0; i < BOARD_SIZE; i++) {
+   for (u16 i = 0; i < BOARD_SIZE; i++) {
       bconst.bpawn_start[i] = bpawn_start[i];
    }
 
    // init wpawn_promotion
-   for (unsigned i = 0; i < BOARD_SIZE; i++) {
+   for (u16 i = 0; i < BOARD_SIZE; i++) {
       bconst.wpawn_promotion[i] = wpawn_promotion[i];
    }
 
    // init bpawn_promotion
-   for (unsigned i = 0; i < BOARD_SIZE; i++) {
+   for (u16 i = 0; i < BOARD_SIZE; i++) {
       bconst.bpawn_promotion[i] = bpawn_promotion[i];
    }
 
@@ -126,17 +126,17 @@ Board get_empty_board(const u8 *b_indexes) {
    Board board;
 
    // init ploc
-   for (unsigned i = 0; i < BOARD_SIZE; i++) {
+   for (u16 i = 0; i < BOARD_SIZE; i++) {
       board.ploc[i] = OFF_BOARD;
    }
 
    // create empty ploc
-   for (unsigned i = 0; i < 64; i++) {
+   for (u16 i = 0; i < 64; i++) {
       board.ploc[b_indexes[i]] = EMPTY;
    }
 
    // init pc_list
-   for (unsigned i = 0; i < PC_LIST_SIZE; i++) {
+   for (u16 i = 0; i < PC_LIST_SIZE; i++) {
       board.pc_list[i].ptype = 0;
       board.pc_list[i].bloc = 0;
    }
@@ -157,11 +157,11 @@ Board get_default_board(const u8 *b_indexes) {
 Board fen(const char *fen, const u8 *b_indexes) {
    Board board = get_empty_board(b_indexes);
 
-   const unsigned len = strlen(fen);
+   const u16 len = strlen(fen);
 
    if (len == 0) return board;
 
-   unsigned square, fen_index, fen_seg, wpc, bpc;
+   u16 square, fen_index, fen_seg, wpc, bpc;
    square = fen_index = fen_seg = 0;
    wpc = WTURN;
    bpc = BTURN;
@@ -249,7 +249,7 @@ Board fen(const char *fen, const u8 *b_indexes) {
             || fen[fen_index] == '8'
          ) {
             const u8 num_spaces = fen[fen_index] - 48;
-            for (unsigned i = 0; i < num_spaces; i++) {
+            for (u16 i = 0; i < num_spaces; i++) {
                square++;
             }
          }
@@ -284,17 +284,17 @@ void print_board(const Board *board) {
    }
 
    // prints board and pieces
-   for (unsigned rank = 2; rank < 10; rank++) {
+   for (u16 rank = 2; rank < 10; rank++) {
       printf(" (%d) ", 10 - rank);
-      for (unsigned file = 4; file < 12; file++) {
-         const unsigned index = rank * 16 + file;
+      for (u16 file = 4; file < 12; file++) {
+         const u16 index = rank * 16 + file;
 
          if (board->ploc[index] == EMPTY) {
             printf(" . ");
          } else {
-            const unsigned p = board->ploc[index];
-            unsigned color = 0;
-            unsigned pc_index = 0;
+            const u16 p = board->ploc[index];
+            u16 color = 0;
+            u16 pc_index = 0;
 
             // get color
             if ((board->pc_list[p].ptype & CBIT) != 0) {

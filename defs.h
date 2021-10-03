@@ -27,6 +27,13 @@
 
 typedef unsigned char u8;
 typedef signed char i8;
+
+typedef unsigned short u16;
+typedef signed short i16;
+
+typedef unsigned int u32;
+typedef signed int i32;
+
 typedef unsigned long u64;
 
 typedef struct Bconst {
@@ -57,7 +64,7 @@ typedef struct Smove {
 
 typedef struct Smove_list {
    Smove list[SMOVE_LIST_SIZE];
-   u8 len;
+   u16 len;
 } Smove_list;
 
 #endif

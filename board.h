@@ -3,7 +3,7 @@
 
 #include "defs.h"
 
-Bconst get_bconst();
+Bconst get_bconst(void);
 Board get_empty_board(const u8 *b_indexes);
 Board get_default_board(const u8 *b_indexes);
 Board fen(const char *fen, const u8 *b_indexes);
