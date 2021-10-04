@@ -91,11 +91,12 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
          } else if ((ptype & KNIGHT) != 0) {
             for (u8 i = 0; i < 8; i++) {
                const u8 dest = bloc + bconst->knight_offsets[i];
+               const u8 dploc = board->ploc[dest];
 
-               if (board->ploc[dest] == OFF_BOARD) {
+               if (dploc == OFF_BOARD) {
                   continue;
-               } else if (board->ploc[dest] == EMPTY
-                  || pcolor != (board->pc_list[board->ploc[dest]].ptype & CBIT))
+               } else if (dploc == EMPTY
+                  || pcolor != (board->pc_list[dploc].ptype & CBIT))
                {
                   smove_list.list[smove_list.len].source = bloc;
                   smove_list.list[smove_list.len].dest = dest;
@@ -110,15 +111,17 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
                u8 dest = bloc;
                while (1) {
                   dest = dest + bconst->bishop_offsets[i];
-                  if (board->ploc[dest] == OFF_BOARD) {
+                  const u8 dploc = board->ploc[dest];
+
+                  if (dploc == OFF_BOARD) {
                      break;
-                  } else if (board->ploc[dest] == EMPTY) {
+                  } else if (dploc == EMPTY) {
                      smove_list.list[smove_list.len].source = bloc;
                      smove_list.list[smove_list.len].dest = dest;
                      smove_list.list[smove_list.len].ptype = bishop;
                      smove_list.len += 1;
                      continue;
-                  } else if (pcolor != (board->pc_list[board->ploc[dest]].ptype & CBIT)) {
+                  } else if (pcolor != (board->pc_list[dploc].ptype & CBIT)) {
                      smove_list.list[smove_list.len].source = bloc;
                      smove_list.list[smove_list.len].dest = dest;
                      smove_list.list[smove_list.len].ptype = bishop;
@@ -136,15 +139,17 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
                u8 dest = bloc;
                while (1) {
                   dest = dest + bconst->rook_offsets[i];
-                  if (board->ploc[dest] == OFF_BOARD) {
+                  const u8 dploc = board->ploc[dest];
+
+                  if (dploc == OFF_BOARD) {
                      break;
-                  } else if (board->ploc[dest] == EMPTY) {
+                  } else if (dploc == EMPTY) {
                      smove_list.list[smove_list.len].source = bloc;
                      smove_list.list[smove_list.len].dest = dest;
                      smove_list.list[smove_list.len].ptype = rook;
                      smove_list.len += 1;
                      continue;
-                  } else if (pcolor != (board->pc_list[board->ploc[dest]].ptype & CBIT)) {
+                  } else if (pcolor != (board->pc_list[dploc].ptype & CBIT)) {
                      smove_list.list[smove_list.len].source = bloc;
                      smove_list.list[smove_list.len].dest = dest;
                      smove_list.list[smove_list.len].ptype = rook;
@@ -162,15 +167,17 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
                u8 dest = bloc;
                while (1) {
                   dest = dest + bconst->queen_offsets[i];
-                  if (board->ploc[dest] == OFF_BOARD) {
+                  const u8 dploc = board->ploc[dest];
+
+                  if (dploc == OFF_BOARD) {
                      break;
-                  } else if (board->ploc[dest] == EMPTY) {
+                  } else if (dploc == EMPTY) {
                      smove_list.list[smove_list.len].source = bloc;
                      smove_list.list[smove_list.len].dest = dest;
                      smove_list.list[smove_list.len].ptype = queen;
                      smove_list.len += 1;
                      continue;
-                  } else if (pcolor != (board->pc_list[board->ploc[dest]].ptype & CBIT)) {
+                  } else if (pcolor != (board->pc_list[dploc].ptype & CBIT)) {
                      smove_list.list[smove_list.len].source = bloc;
                      smove_list.list[smove_list.len].dest = dest;
                      smove_list.list[smove_list.len].ptype = queen;
@@ -186,11 +193,12 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
          } else if ((ptype & KING) != 0) {
             for (u8 i = 0; i < 8; i++) {
                const u8 dest = bloc + bconst->king_offsets[i];
+               const u8 dploc = board->ploc[dest];
 
-               if (board->ploc[dest] == OFF_BOARD) {
+               if (dploc == OFF_BOARD) {
                   continue;
-               } else if (board->ploc[dest] == EMPTY
-                  || pcolor != (board->pc_list[board->ploc[dest]].ptype & CBIT))
+               } else if (dploc == EMPTY
+                  || pcolor != (board->pc_list[dploc].ptype & CBIT))
                {
                   smove_list.list[smove_list.len].source = bloc;
                   smove_list.list[smove_list.len].dest = dest;

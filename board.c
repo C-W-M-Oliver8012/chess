@@ -316,7 +316,7 @@ void print_board(const Board *board) {
 
    // prints board and pieces
    for (u16 rank = 2; rank < 10; rank++) {
-      printf(" (%d) ", 10 - rank);
+      printf(" (%lu) ", 10 - rank);
       for (u16 file = 4; file < 12; file++) {
          const u16 index = rank * 16 + file;
 
