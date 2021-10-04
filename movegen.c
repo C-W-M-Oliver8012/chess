@@ -89,10 +89,8 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
 
          // if piece is a knight
          } else if ((ptype & KNIGHT) != 0) {
-            const i16 knight_offsets[8] = {-18, -31, -33, -14, 14, 33, 31, 18};
-
             for (u8 i = 0; i < 8; i++) {
-               const u8 dest = bloc + knight_offsets[i];
+               const u8 dest = bloc + bconst->knight_offsets[i];
 
                if (board->ploc[dest] == OFF_BOARD) {
                   continue;
@@ -108,12 +106,10 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
 
          // if piece is a bishop
          } else if ((ptype & BISHOP) != 0) {
-            const i16 bishop_offsets[4] = {-17, -15, 15, 17};
-
             for (u8 i = 0; i < 4; i++) {
                u8 dest = bloc;
                while (1) {
-                  dest = dest + bishop_offsets[i];
+                  dest = dest + bconst->bishop_offsets[i];
                   if (board->ploc[dest] == OFF_BOARD) {
                      break;
                   } else if (board->ploc[dest] == EMPTY) {
@@ -136,12 +132,10 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
 
          // if piece is a rook
          } else if ((ptype & ROOK) != 0) {
-            const i16 rook_offsets[4] = {-16, -1, 1, 16};
-
             for (u8 i = 0; i < 4; i++) {
                u8 dest = bloc;
                while (1) {
-                  dest = dest + rook_offsets[i];
+                  dest = dest + bconst->rook_offsets[i];
                   if (board->ploc[dest] == OFF_BOARD) {
                      break;
                   } else if (board->ploc[dest] == EMPTY) {
@@ -164,12 +158,10 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
 
          // if piece is a queen
          } else if ((ptype & QUEEN) != 0) {
-            const i16 queen_offsets[8] = {-17, -16, -15, -1, 1, 15, 16, 17};
-
             for (u8 i = 0; i < 8; i++) {
                u8 dest = bloc;
                while (1) {
-                  dest = dest + queen_offsets[i];
+                  dest = dest + bconst->queen_offsets[i];
                   if (board->ploc[dest] == OFF_BOARD) {
                      break;
                   } else if (board->ploc[dest] == EMPTY) {
@@ -192,10 +184,8 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
 
          // if piece is a king
          } else if ((ptype & KING) != 0) {
-            const i16 king_offsets[8] = {-17, -16, -15, -1, 1, 15, 16, 17};
-
             for (u8 i = 0; i < 8; i++) {
-               const u8 dest = bloc + king_offsets[i];
+               const u8 dest = bloc + bconst->king_offsets[i];
 
                if (board->ploc[dest] == OFF_BOARD) {
                   continue;

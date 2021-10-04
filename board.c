@@ -89,6 +89,12 @@ Bconst get_bconst(void) {
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
    };
 
+   const i16 knight_offsets[8] = {-18, -31, -33, -14, 14, 33, 31, 18};
+   const i16 bishop_offsets[4] = {-17, -15, 15, 17};
+   const i16 rook_offsets[4] = {-16, -1, 1, 16};
+   const i16 queen_offsets[8] = {-17, -16, -15, -1, 1, 15, 16, 17};
+   const i16 king_offsets[8] = {-17, -16, -15, -1, 1, 15, 16, 17};
+
    // init b_indexes
    for (u16 i = 0; i < 64; i++) {
       bconst.b_indexes[i] = b_indexes[i];
@@ -117,6 +123,31 @@ Bconst get_bconst(void) {
    // init bpawn_promotion
    for (u16 i = 0; i < BOARD_SIZE; i++) {
       bconst.bpawn_promotion[i] = bpawn_promotion[i];
+   }
+
+   // init knight_offsets
+   for (u16 i = 0; i < 8; i++) {
+      bconst.knight_offsets[i] = knight_offsets[i];
+   }
+
+   // init bishop_offsets
+   for (u16 i = 0; i < 4; i++) {
+      bconst.bishop_offsets[i] = bishop_offsets[i];
+   }
+
+   // init rook_offsets
+   for (u16 i = 0; i < 4; i++) {
+      bconst.rook_offsets[i] = rook_offsets[i];
+   }
+
+   // init queen_offsets
+   for (u16 i = 0; i < 8; i++) {
+      bconst.queen_offsets[i] = queen_offsets[i];
+   }
+
+   // init king_offsets
+   for (u16 i = 0; i < 8; i++) {
+      bconst.king_offsets[i] = king_offsets[i];
    }
 
    return bconst;

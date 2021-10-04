@@ -43,6 +43,11 @@ typedef struct Bconst {
    u8 bpawn_start[BOARD_SIZE];
    u8 wpawn_promotion[BOARD_SIZE];
    u8 bpawn_promotion[BOARD_SIZE];
+   i16 knight_offsets[8];
+   i16 bishop_offsets[4];
+   i16 rook_offsets[4];
+   i16 queen_offsets[8];
+   i16 king_offsets[8];
 } Bconst;
 
 typedef struct Pc {
