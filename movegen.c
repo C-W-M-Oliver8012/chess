@@ -27,14 +27,14 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
    // loops through piece list
    for (u8 ploc = begin; ploc < end; ploc++) {
       u8 bloc = board->pc_list[ploc].bloc;
-      u8 ptype = board->pc_list[ploc].ptype;
+      u8 ptype = board->pc_list[ploc].ptype & PBITS;
       u8 pcolor = (board->pc_list[ploc].ptype & CBIT);
 
       // if the piece is still on the board
       if (board->ploc[bloc] == ploc) {
 
          // if the piece is a pawn
-         if ((ptype & PBITS) == PAWN) {
+         if (ptype == PAWN) {
             u8 one_up, two_up, starting_pos, promotion;
 
             if (board->stm == WTURN) {
@@ -88,7 +88,7 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
             }
 
          // if piece is a knight
-         } else if ((ptype & PBITS) == KNIGHT) {
+         } else if (ptype == KNIGHT) {
             for (u8 i = 0; i < 8; i++) {
                const u8 dest = bloc + bconst->knight_offsets[i];
                const u8 dploc = board->ploc[dest];
@@ -105,7 +105,7 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
             }
 
          // if piece is a bishop
-         } else if ((ptype & PBITS) == BISHOP) {
+         } else if (ptype == BISHOP) {
             for (u8 i = 0; i < 4; i++) {
                u8 dest = bloc;
                while (1) {
@@ -134,7 +134,7 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
             }
 
          // if piece is a rook
-         } else if ((ptype & PBITS) == ROOK) {
+         } else if (ptype == ROOK) {
             for (u8 i = 0; i < 4; i++) {
                u8 dest = bloc;
                while (1) {
@@ -163,7 +163,7 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
             }
 
          // if piece is a queen
-         } else if ((ptype & PBITS) == QUEEN) {
+         } else if (ptype == QUEEN) {
             for (u8 i = 0; i < 8; i++) {
                u8 dest = bloc;
                while (1) {
@@ -192,7 +192,7 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
             }
 
          // if piece is a king
-         } else if ((ptype & PBITS) == KING) {
+         } else if (ptype == KING) {
             for (u8 i = 0; i < 8; i++) {
                const u8 dest = bloc + bconst->king_offsets[i];
                const u8 dploc = board->ploc[dest];
