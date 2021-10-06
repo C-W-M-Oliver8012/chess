@@ -15,7 +15,7 @@ int main(void) {
 
    for (u16 i = 0; i < smove_list.len; i++) {
       printf(
-         "%lu: %s%s\n",
+         "%u: %s%s\n",
          i + 1,
          bconst.sqr_names[smove_list.list[i].source],
          bconst.sqr_names[smove_list.list[i].dest]
