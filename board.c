@@ -335,17 +335,17 @@ void print_board(const Board *board) {
             }
 
             // get piece type
-            if ((board->pc_list[p].ptype & PAWN) != 0) {
+            if ((board->pc_list[p].ptype & PBITS) == PAWN) {
                pc_index = 0;
-            } else if ((board->pc_list[p].ptype & KNIGHT) != 0) {
+            } else if ((board->pc_list[p].ptype & PBITS) == KNIGHT) {
                pc_index = 1;
-            } else if ((board->pc_list[p].ptype & BISHOP) != 0) {
+            } else if ((board->pc_list[p].ptype & PBITS) == BISHOP) {
                pc_index = 2;
-            } else if ((board->pc_list[p].ptype & ROOK) != 0) {
+            } else if ((board->pc_list[p].ptype & PBITS) == ROOK) {
                pc_index = 3;
-            } else if ((board->pc_list[p].ptype & QUEEN) != 0) {
+            } else if ((board->pc_list[p].ptype & PBITS) == QUEEN) {
                pc_index = 4;
-            } else if ((board->pc_list[p].ptype & KING) != 0) {
+            } else if ((board->pc_list[p].ptype & PBITS) == KING) {
                pc_index = 5;
             }
 

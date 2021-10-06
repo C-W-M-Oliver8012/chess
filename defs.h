@@ -14,11 +14,13 @@
 
 #define PAWN 1
 #define KNIGHT 2
-#define BISHOP 4
-#define ROOK 8
-#define QUEEN 16
-#define KING 32
-#define CBIT 64   // the bit will be set to 1 for white and 0 for black
+#define BISHOP 3
+#define ROOK 4
+#define QUEEN 5
+#define KING 6
+
+#define PBITS 7
+#define CBIT 8   // the bit will be set to 1 for white and 0 for black
 
 #define WTURN 2
 #define BTURN 18
