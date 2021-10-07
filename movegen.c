@@ -27,7 +27,7 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
    // loops through piece list
    for (u8 ploc = begin; ploc < end; ploc++) {
       u8 bloc = board->pc_list[ploc].bloc;
-      u8 ptype = board->pc_list[ploc].ptype & PBITS;
+      u8 ptype = (board->pc_list[ploc].ptype & PBITS);
       u8 pcolor = (board->pc_list[ploc].ptype & CBIT);
 
       // if the piece is still on the board

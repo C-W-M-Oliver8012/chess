@@ -21,6 +21,12 @@
 
 #define PBITS 7
 #define CBIT 8   // the bit will be set to 1 for white and 0 for black
+#define FBITS 240
+
+#define PROMOTION 16
+#define EN_PASSANT 32
+#define CASTLING 48
+#define CLEAR_FBITS 15
 
 #define WTURN 2
 #define BTURN 18
