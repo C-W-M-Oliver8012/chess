@@ -1,7 +1,6 @@
 #include "defs.h"
 #include "board.h"
 #include "movegen.h"
-#include <time.h>
 
 int main(void) {
    const Bconst bconst = get_bconst();
@@ -9,18 +8,11 @@ int main(void) {
    const Board board = get_default_board(bconst.b_indexes);
    print_board(&board);
 
-   u16 start = clock();
+   u64 start = clock();
    const Smove_list smove_list = movegen(&board, &bconst);
-   u16 end = clock();
+   u64 end = clock();
 
-   for (u16 i = 0; i < smove_list.len; i++) {
-      printf(
-         "%u: %s%s\n",
-         i + 1,
-         bconst.sqr_names[smove_list.list[i].source],
-         bconst.sqr_names[smove_list.list[i].dest]
-      );
-   }
+   print_smove_list(&bconst, &smove_list);
 
    double time = ((double)end - (double)start) / CLOCKS_PER_SEC;
    printf("Program completed in %f seconds.\n", time);

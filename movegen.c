@@ -1,5 +1,12 @@
 #include "movegen.h"
 
+inline void add_move(u8 source, u8 dest, u8 ptype, Smove_list *smove_list) {
+   smove_list->list[smove_list->len].source = source;
+   smove_list->list[smove_list->len].dest = dest;
+   smove_list->list[smove_list->len].ptype = ptype;
+   smove_list->len = smove_list->len + 1;
+}
+
 Smove_list movegen(const Board *board, const Bconst *bconst) {
    Smove_list smove_list;
    smove_list.len = 0;
@@ -52,38 +59,17 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
             // moving pawn one up
             if (board->ploc[one_up] == EMPTY) {
                if (promotion == 1) {
-                  smove_list.list[smove_list.len].source = bloc;
-                  smove_list.list[smove_list.len].dest = one_up;
-                  smove_list.list[smove_list.len].ptype = knight;
-                  smove_list.len += 1;
-
-                  smove_list.list[smove_list.len].source = bloc;
-                  smove_list.list[smove_list.len].dest = one_up;
-                  smove_list.list[smove_list.len].ptype = bishop;
-                  smove_list.len += 1;
-
-                  smove_list.list[smove_list.len].source = bloc;
-                  smove_list.list[smove_list.len].dest = one_up;
-                  smove_list.list[smove_list.len].ptype = rook;
-                  smove_list.len += 1;
-
-                  smove_list.list[smove_list.len].source = bloc;
-                  smove_list.list[smove_list.len].dest = one_up;
-                  smove_list.list[smove_list.len].ptype = queen;
-                  smove_list.len += 1;
+                  add_move(bloc, one_up, (knight & PROMOTION), &smove_list);
+                  add_move(bloc, one_up, (bishop & PROMOTION), &smove_list);
+                  add_move(bloc, one_up, (rook & PROMOTION), &smove_list);
+                  add_move(bloc, one_up, (queen & PROMOTION), &smove_list);
                } else {
-                  smove_list.list[smove_list.len].source = bloc;
-                  smove_list.list[smove_list.len].dest = one_up;
-                  smove_list.list[smove_list.len].ptype = pawn;
-                  smove_list.len += 1;
+                  add_move(bloc, one_up, pawn, &smove_list);
                }
 
                // moving pawn two up
                if (starting_pos == 1 && board->ploc[two_up] == EMPTY) {
-                  smove_list.list[smove_list.len].source = bloc;
-                  smove_list.list[smove_list.len].dest = two_up;
-                  smove_list.list[smove_list.len].ptype = pawn;
-                  smove_list.len += 1;
+                  add_move(bloc, two_up, pawn, &smove_list);
                }
             }
 
@@ -97,10 +83,7 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
                if (dploc == OFF_BOARD) {
                   continue;
                } else if (dploc == EMPTY || pcolor != dpcolor) {
-                  smove_list.list[smove_list.len].source = bloc;
-                  smove_list.list[smove_list.len].dest = dest;
-                  smove_list.list[smove_list.len].ptype = knight;
-                  smove_list.len += 1;
+                  add_move(bloc, dest, knight, &smove_list);
                }
             }
 
@@ -116,16 +99,9 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
                   if (dploc == OFF_BOARD) {
                      break;
                   } else if (dploc == EMPTY) {
-                     smove_list.list[smove_list.len].source = bloc;
-                     smove_list.list[smove_list.len].dest = dest;
-                     smove_list.list[smove_list.len].ptype = bishop;
-                     smove_list.len += 1;
-                     continue;
+                     add_move(bloc, dest, bishop, &smove_list);
                   } else if (pcolor != dpcolor) {
-                     smove_list.list[smove_list.len].source = bloc;
-                     smove_list.list[smove_list.len].dest = dest;
-                     smove_list.list[smove_list.len].ptype = bishop;
-                     smove_list.len += 1;
+                     add_move(bloc, dest, bishop, &smove_list);
                      break;
                   } else {
                      break;
@@ -145,16 +121,9 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
                   if (dploc == OFF_BOARD) {
                      break;
                   } else if (dploc == EMPTY) {
-                     smove_list.list[smove_list.len].source = bloc;
-                     smove_list.list[smove_list.len].dest = dest;
-                     smove_list.list[smove_list.len].ptype = rook;
-                     smove_list.len += 1;
-                     continue;
+                     add_move(bloc, dest, rook, &smove_list);
                   } else if (pcolor != dpcolor) {
-                     smove_list.list[smove_list.len].source = bloc;
-                     smove_list.list[smove_list.len].dest = dest;
-                     smove_list.list[smove_list.len].ptype = rook;
-                     smove_list.len += 1;
+                     add_move(bloc, dest, rook, &smove_list);
                      break;
                   } else {
                      break;
@@ -174,16 +143,9 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
                   if (dploc == OFF_BOARD) {
                      break;
                   } else if (dploc == EMPTY) {
-                     smove_list.list[smove_list.len].source = bloc;
-                     smove_list.list[smove_list.len].dest = dest;
-                     smove_list.list[smove_list.len].ptype = queen;
-                     smove_list.len += 1;
-                     continue;
+                     add_move(bloc, dest, queen, &smove_list);
                   } else if (pcolor != dpcolor) {
-                     smove_list.list[smove_list.len].source = bloc;
-                     smove_list.list[smove_list.len].dest = dest;
-                     smove_list.list[smove_list.len].ptype = queen;
-                     smove_list.len += 1;
+                     add_move(bloc, dest, queen, &smove_list);
                      break;
                   } else {
                      break;
@@ -201,10 +163,7 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
                if (dploc == OFF_BOARD) {
                   continue;
                } else if (dploc == EMPTY || pcolor != dpcolor) {
-                  smove_list.list[smove_list.len].source = bloc;
-                  smove_list.list[smove_list.len].dest = dest;
-                  smove_list.list[smove_list.len].ptype = king;
-                  smove_list.len += 1;
+                  add_move(bloc, dest, king, &smove_list);
                }
             }
          }
@@ -212,4 +171,20 @@ Smove_list movegen(const Board *board, const Bconst *bconst) {
    }
 
    return smove_list;
+}
+
+void print_smove(const Bconst *bconst, const Smove *smove) {
+   printf(
+      "%s%s",
+      bconst->sqr_names[smove->source],
+      bconst->sqr_names[smove->dest]
+   );
+}
+
+void print_smove_list(const Bconst *bconst, const Smove_list *smove_list) {
+   for (u16 i = 0; i < smove_list->len; i++) {
+      printf("%u: ", i + 1);
+      print_smove(bconst, &smove_list->list[i]);
+      printf("\n");
+   }
 }

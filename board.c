@@ -302,9 +302,9 @@ Board fen(const char *fen, const u8 *b_indexes) {
 }
 
 void print_board(const Board *board) {
-   const char pieces[2][6] = {
-      {'I', 'N', 'B', 'R', 'Q', 'K'},
-      {'i', 'n', 'b', 'r', 'q', 'k'},
+   const char pieces[2][7] = {
+      {' ', 'i', 'n', 'b', 'r', 'q', 'k'},
+      {' ', 'I', 'N', 'B', 'R', 'Q', 'K'},
    };
 
    // prints the side to move
@@ -318,38 +318,17 @@ void print_board(const Board *board) {
    for (u16 rank = 2; rank < 10; rank++) {
       printf(" (%u) ", 10 - rank);
       for (u16 file = 4; file < 12; file++) {
-         const u16 index = rank * 16 + file;
+         const u8 bloc = rank * 16 + file;
+         const u8 ploc = board->ploc[bloc];
 
-         if (board->ploc[index] == EMPTY) {
+         if (ploc == EMPTY || ploc == OFF_BOARD) {
             printf(" . ");
          } else {
-            const u16 p = board->ploc[index];
-            u16 color = 0;
-            u16 pc_index = 0;
+            const u8 ptype = (board->pc_list[ploc].ptype & PBITS);
+            const u8 pcolor = (board->pc_list[ploc].ptype & CBIT);
+            const u16 color = pcolor == CBIT;
 
-            // get color
-            if ((board->pc_list[p].ptype & CBIT) != 0) {
-               color = 0;
-            } else {
-               color = 1;
-            }
-
-            // get piece type
-            if ((board->pc_list[p].ptype & PBITS) == PAWN) {
-               pc_index = 0;
-            } else if ((board->pc_list[p].ptype & PBITS) == KNIGHT) {
-               pc_index = 1;
-            } else if ((board->pc_list[p].ptype & PBITS) == BISHOP) {
-               pc_index = 2;
-            } else if ((board->pc_list[p].ptype & PBITS) == ROOK) {
-               pc_index = 3;
-            } else if ((board->pc_list[p].ptype & PBITS) == QUEEN) {
-               pc_index = 4;
-            } else if ((board->pc_list[p].ptype & PBITS) == KING) {
-               pc_index = 5;
-            }
-
-            printf(" %c ", pieces[color][pc_index]);
+            printf(" %c ", pieces[color][ptype]);
          }
       }
       printf("\n");
